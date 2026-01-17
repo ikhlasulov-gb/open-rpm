@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/favicon/site.webmanifest">
+</head>
+<body>
+
+<div class="container">
+
+    <div id="intro-screen">
+        <h1 data-i18n="app_title"></h1>
+        <h3 data-i18n="app_subtitle"></h3>
+
+        <div class="instruction-box">
+            <p><strong data-i18n="instructions_title"></strong> <span data-i18n="instructions_text"></span></p>
+            <p><strong data-i18n="time_text"></strong></p>
+            <hr>
+
+            <div class="form-group">
+                <label for="lang-select" data-i18n="lang_label"></label>
+                <select id="lang-select" onchange="app.changeLanguage(this.value)">
+                    <option value="en">English</option>
+                    <option value="ru">Русский</option>
+                    <option value="id">Bahasa Indonesia</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="user-age" data-i18n="age_label"></label>
+                <select id="user-age">
+                    <option value="100" data-i18n="age_14_30"></option>
+                    <option value="97" data-i18n="age_31_35"></option>
+                    <option value="93" data-i18n="age_36_40"></option>
+                    <option value="88" data-i18n="age_41_45"></option>
+                    <option value="82" data-i18n="age_46_50"></option>
+                    <option value="76" data-i18n="age_51_55"></option>
+                    <option value="70" data-i18n="age_56_plus"></option>
+                </select>
+            </div>
+        </div>
+        <button class="btn" onclick="app.startTest()" data-i18n="start_btn"></button>
+    </div>
+
+    <div id="test-screen" class="hidden">
+        <div class="test-wrapper">
+            <div class="timer-bar">
+                <div class="timer-progress" id="timer-bar-fill"></div>
+                <div class="timer-text" id="timer-text"></div>
+            </div>
+
+            <div class="progress-info" id="progress-container"></div>
+
+            <div class="question-area">
+                <img id="q-image" class="question-image" alt="Matrix Question">
+            </div>
+
+            <div class="options-grid" id="options-container"></div>
+
+            <div class="nav-controls">
+                <button class="btn" id="btn-prev" onclick="app.prevQuestion()" data-i18n="btn_prev"></button>
+                <button class="btn btn-cancel" onclick="app.confirmEndTest()" data-i18n="btn_end"></button>
+                <button class="btn" id="btn-next" onclick="app.nextQuestion()" data-i18n="btn_next"></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="result-screen" class="hidden">
+
+        <div class="results-wrapper">
+            <div class="result-card main-card">
+                <h3 data-i18n="result_label"></h3>
+                <span class="score-big" id="final-iq"></span>
+                <div class="diagnosis-text" id="final-diagnosis">--</div>
+
+                <div class="stats-container">
+                    <div class="stat-group">
+                        <span class="stat-label" data-i18n="total_score_label"></span>
+                        <span class="stat-value" id="total-raw-score"></span>
+                    </div>
+                    <div class="stat-group">
+                        <span class="stat-label" data-i18n="time_taken_label"></span>
+                        <span class="stat-value" id="time-taken"></span>
+                    </div>
+                    <div class="stat-group">
+                        <span class="stat-label" data-i18n="result_age_label"></span>
+                        <span class="stat-value" id="user-age-val"></span>
+                    </div>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-i18n="th_series"></th>
+                            <th data-i18n="th_correct"></th>
+                            <th data-i18n="th_deviation"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="series-table-body"></tbody>
+                </table>
+
+                <div id="reliability-msg"></div>
+            </div>
+
+            <div class="right-column">
+                <div class="sub-card">
+                    <h3 data-i18n="interpretation_label"></h3>
+                    <p id="interpretation-text"></p>
+                </div>
+
+                <div class="sub-card">
+                    <h3 data-i18n="analysis_label"></h3>
+                    <p id="recommendation-text"></p>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn" onclick="app.resetApp()" data-i18n="return_btn"></button>
+    </div>
+
+    <div id="confirm-modal" class="hidden modal-overlay">
+        <div class="modal-content">
+            <h3 id="modal-title" data-i18n="modal_title"></h3>
+            <p id="modal-message" data-i18n="modal_msg"></p>
+            <div class="modal-actions">
+                <button class="btn btn-cancel" onclick="app.hideConfirm()" data-i18n="modal_cancel"></button>
+                <button class="btn btn-confirm" onclick="app.forceEnd()" data-i18n="modal_confirm"></button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<footer class="site-footer">
+    <div class="footer-content">
+        <a href="https://ikhlasulov.unaux.com" target="_blank" class="footer-brand">Ikhlasulov</a>
+        <a id="wiki-link" data-i18n-href="wiki_url" href="" target="_blank" class="footer-brand">2026</a>
+        <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" class="footer-link">GPLv3+</a>
+    </div>
+</footer>
+
+</body>
+
+<script src="translations.js"></script>
+<script src="answers.js"></script>
+<script src="script.js"></script>
+
+</html>

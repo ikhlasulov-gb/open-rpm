@@ -1,7 +1,7 @@
 const TRANSLATIONS = {
     en: {
         app_title: "Raven's Test",
-        site_title: "Raven's Test",
+        site_title: "Open RPM",
         app_subtitle: "Raven's Progressive Matrices (RPM)",
         instructions_title: "Instructions:",
         instructions_text: "You will be offered 60 tasks (5 series). Find logical pattern and select missing piece.",
@@ -75,7 +75,7 @@ const TRANSLATIONS = {
     },
     ru: {
         app_title: "Тест Равена",
-        site_title: "Тест Равена",
+        site_title: "Open RPM",
         app_subtitle: "Прогрессивные матрицы Равена (ПМР)",
         instructions_title: "Инструкции:",
         instructions_text: "Вам будет предложено 60 заданий (5 серий). Найдите закономерность и выберите недостающий фрагмент.",
@@ -149,7 +149,7 @@ const TRANSLATIONS = {
     },
     id: {
         app_title: "Tes Raven",
-        site_title: "Tes Raven",
+        site_title: "Open RPM",
         app_subtitle: "Matriks Progresif Raven (MPR)",
         instructions_title: "Instruksi:",
         instructions_text: "Anda akan ditawarkan 60 tugas (5 seri Temukan pola logis dan pilih bagian yang hilang.",

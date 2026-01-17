@@ -32,6 +32,10 @@ The application features an adaptive scoring algorithm that adjusts IQ estimates
 
 The scoring system utilizes a pre-defined normative distribution. Raw scores are converted to a base IQ using cubic spline interpolation. The final score is then adjusted by an age percentage factor to comply with standard psychometric practices.
 
+<p align="center">
+  <img src="README/test.png" alt="Test"/>
+</p>
+
 Reliability is calculated by comparing the user's performance in Series A (the easiest series) against expected deviations. Significant anomalies may flag the result as potentially unreliable due to misunderstanding or inattention.
 
 ## Documentation

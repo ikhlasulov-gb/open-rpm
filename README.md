@@ -42,7 +42,7 @@ Reliability is calculated by comparing the user's performance in Series A (the e
 
 The logic, normative data, and scoring standards of this test are strictly derived from the clinical manual:
 
-- [Тест Равена. Шкала прогрессивных матриц](README/Тест_Равена._Шкала_прогрессивных_матриц..pdf)
+- [Тест Равена. Шкала прогрессивных матриц.](README/Тест_Равена._Шкала_прогрессивных_матриц..pdf)
 
 This document contains the detailed breakdown of the 5 series, correct answer keys, normative distributions, and IQ conversion tables used in this application.
 

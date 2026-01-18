@@ -564,13 +564,26 @@ tbody td { background-color: #000000; color: var(--body-text); }
     }
 
     .result-card.main-card, .sub-card {
-        min-width: 0;
+        min-width: 0; /* Important: allows flex item to shrink below content size */
         width: 100%;
         padding: 0.8rem;
     }
 
     table {
-        min-width: 22rem;
+        width: 100%;
+        min-width: 0; /* Remove fixed min-width */
+        table-layout: fixed; /* Force fit table columns to container width */
+        font-size: 0.7rem;
+        white-space: normal; /* Allow text wrapping inside table if needed */
+    }
+
+    thead th {
+        padding: 0.3rem 0.1rem;
+        font-size: 0.65rem;
+    }
+
+    tbody td {
+        padding: 0.3rem 0.1rem;
     }
 
     h1 { font-size: 1.4rem; }
@@ -585,6 +598,20 @@ tbody td { background-color: #000000; color: var(--body-text); }
 
     .nav-controls { flex-wrap: wrap; }
     .btn { width: 100%; margin: 0.2rem 0; box-sizing: border-box; }
+
+    .stats-container {
+        padding: 0.4rem 0.2rem;
+    }
+
+    .stat-group {
+        padding: 0.2rem 0.1rem;
+    }
+
+    .stat-label {
+        font-size: 0.55rem; /* Smaller font to fit labels */
+        letter-spacing: 0.03rem; /* Tighter spacing */
+        line-height: 1.1;
+    }
 }
 
 @media (max-width: 30rem) {

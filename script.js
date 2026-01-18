@@ -132,33 +132,40 @@
             this.agePercent = 100;
             this.currentLang = 'en';
             this.endTime = 0;
+            this.lastRenderedQuestion = null;
+
+            this.imageCache = new Map();
+
+            this.preloadQueue = [];
+            this.activeConnections = 0;
+            this.maxConnections = 1;
 
             this.screens = {
                 intro: document.getElementById('intro-screen'),
- test: document.getElementById('test-screen'),
- result: document.getElementById('result-screen')
+                test: document.getElementById('test-screen'),
+                result: document.getElementById('result-screen')
             };
 
             this.dom = {
                 timerBar: document.getElementById('timer-bar-fill'),
- timerText: document.getElementById('timer-text'),
- qImage: document.getElementById('q-image'),
- options: document.getElementById('options-container'),
- qNum: document.getElementById('current-q-num'),
- series: document.getElementById('current-series'),
- progressContainer: document.getElementById('progress-container'),
- prevBtn: document.getElementById('btn-prev'),
- nextBtn: document.getElementById('btn-next'),
- resultTable: document.querySelector('table'),
- interpretationCard: document.querySelectorAll('.sub-card')[0],
- totalScore: document.getElementById('total-raw-score'),
- timeTaken: document.getElementById('time-taken'),
- confirmModal: document.getElementById('confirm-modal'),
- langSelect: document.getElementById('lang-select'),
- userAge: document.getElementById('user-age'),
- modalTitle: document.getElementById('modal-title'),
- modalMessage: document.getElementById('modal-message'),
- confirmBtn: document.querySelector('.btn-confirm')
+                timerText: document.getElementById('timer-text'),
+                qImage: document.getElementById('q-image'),
+                options: document.getElementById('options-container'),
+                qNum: document.getElementById('current-q-num'),
+                series: document.getElementById('current-series'),
+                progressContainer: document.getElementById('progress-container'),
+                prevBtn: document.getElementById('btn-prev'),
+                nextBtn: document.getElementById('btn-next'),
+                resultTable: document.querySelector('table'),
+                interpretationCard: document.querySelectorAll('.sub-card')[0],
+                totalScore: document.getElementById('total-raw-score'),
+                timeTaken: document.getElementById('time-taken'),
+                confirmModal: document.getElementById('confirm-modal'),
+                langSelect: document.getElementById('lang-select'),
+                userAge: document.getElementById('user-age'),
+                modalTitle: document.getElementById('modal-title'),
+                modalMessage: document.getElementById('modal-message'),
+                confirmBtn: document.querySelector('.btn-confirm')
             };
         }
 
@@ -169,6 +176,9 @@
                     e.returnValue = '';
                 }
             });
+
+            this.startQueuePreloading(1, 60);
+
             setTimeout(() => {
                 this.determineLanguage();
                 this.loadSavedAge();
@@ -232,6 +242,10 @@
             this.currentQuestion = 1;
             this.userAnswers = {};
             this.timeLeft = CONFIG.totalTime;
+            this.lastRenderedQuestion = null;
+
+            this.preloadQueue = [];
+            this.activeConnections = 0;
             this.screens.intro.classList.remove('hidden');
         }
 
@@ -258,8 +272,6 @@
             this.testActive = true;
             this.startTimer();
             this.renderQuestion();
-            // Preload first few images
-            this.preloadImages(1, 3);
         }
 
         startTimer() {
@@ -282,15 +294,44 @@
             this.dom.timerBar.style.width = `${(this.timeLeft / CONFIG.totalTime) * 100}%`;
         }
 
-        // New method: Preloads next images into browser cache
-        preloadImages(startIndex, count) {
-            for (let i = 0; i < count; i++) {
-                const qIndex = startIndex + i;
-                if (qIndex > 60) break;
+        preloadImage(index) {
+            if (this.imageCache.has(index) || index > 60 || index < 1) return;
 
-                const img = new Image();
-                // We don't append it to DOM, just set src to trigger download
-                img.src = `${CONFIG.imagePath}${qIndex}${CONFIG.imageExt}`;
+            this.activeConnections++;
+            const url = `${CONFIG.imagePath}${index}${CONFIG.imageExt}`;
+
+            fetch(url)
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                return response.blob();
+            })
+            .then(blob => {
+                const blobUrl = URL.createObjectURL(blob);
+                this.imageCache.set(index, blobUrl);
+                this.activeConnections--;
+                this.processQueue();
+            })
+            .catch(error => {
+                console.error(`Failed to load image ${index}:`, error);
+                this.activeConnections--;
+                this.processQueue();
+            });
+        }
+
+        startQueuePreloading(startIndex, count) {
+            for (let i = 0; i < count; i++) {
+                const idx = startIndex + i;
+                if (!this.imageCache.has(idx)) {
+                    this.preloadQueue.push(idx);
+                }
+            }
+            this.processQueue();
+        }
+
+        processQueue() {
+            while (this.activeConnections < this.maxConnections && this.preloadQueue.length > 0) {
+                const index = this.preloadQueue.shift();
+                this.preloadImage(index);
             }
         }
 
@@ -307,9 +348,41 @@
             const s = this.getSeries(q);
             const template = this.t('progress_template');
             this.dom.progressContainer.innerText = template.replace('{q}', q).replace('{s}', s);
+
             const img = this.dom.qImage;
-            img.src = `${CONFIG.imagePath}${q}${CONFIG.imageExt}`;
-            img.onerror = () => img.src = `https://via.placeholder.com/400x400?text=Q+${q}+(${s})`;
+
+            if (this.lastRenderedQuestion !== q) {
+                this.lastRenderedQuestion = q;
+
+                if (!this.imageCache.has(q)) {
+                    this.preloadQueue.unshift(q);
+                    this.processQueue();
+                }
+
+                const blobUrl = this.imageCache.get(q);
+
+                if (blobUrl) {
+                    img.src = blobUrl;
+                    img.style.opacity = '1';
+                    img.style.filter = '';
+                    img.style.transition = 'none';
+                } else {
+                    const newSrc = `${CONFIG.imagePath}${q}${CONFIG.imageExt}`;
+                    img.src = newSrc;
+                    img.style.filter = 'grayscale(100%) brightness(0.7)';
+
+                    const onLoad = () => {
+                        img.onload = null;
+                        img.onerror = null;
+                        img.style.filter = '';
+                    };
+
+                    img.onload = onLoad;
+
+                    if (img.complete) onLoad();
+                }
+            }
+
             this.dom.options.innerHTML = '';
             this.dom.options.className = 'options-grid';
             const optCount = (s === 'A' || s === 'B') ? 6 : 8;
@@ -329,9 +402,6 @@
                 this.dom.nextBtn.innerText = this.t('btn_next');
                 this.dom.nextBtn.classList.remove('btn-finish');
             }
-
-            // Preload next 3 questions in the background
-            this.preloadImages(q + 1, 3);
         }
 
         selectAnswer(val) {
@@ -372,10 +442,10 @@
                 const ratio = score / 15;
                 return [
                     Math.round(8 * ratio),
- Math.round(4 * ratio),
- Math.round(2 * ratio),
- Math.round(1 * ratio),
- 0
+                    Math.round(4 * ratio),
+                    Math.round(2 * ratio),
+                    Math.round(1 * ratio),
+                    0
                 ];
             }
 

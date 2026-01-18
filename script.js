@@ -258,6 +258,8 @@
             this.testActive = true;
             this.startTimer();
             this.renderQuestion();
+            // Preload first few images
+            this.preloadImages(1, 3);
         }
 
         startTimer() {
@@ -278,6 +280,18 @@
             const s = this.timeLeft % 60;
             this.dom.timerText.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
             this.dom.timerBar.style.width = `${(this.timeLeft / CONFIG.totalTime) * 100}%`;
+        }
+
+        // New method: Preloads next images into browser cache
+        preloadImages(startIndex, count) {
+            for (let i = 0; i < count; i++) {
+                const qIndex = startIndex + i;
+                if (qIndex > 60) break;
+
+                const img = new Image();
+                // We don't append it to DOM, just set src to trigger download
+                img.src = `${CONFIG.imagePath}${qIndex}${CONFIG.imageExt}`;
+            }
         }
 
         getSeries(n) {
@@ -315,6 +329,9 @@
                 this.dom.nextBtn.innerText = this.t('btn_next');
                 this.dom.nextBtn.classList.remove('btn-finish');
             }
+
+            // Preload next 3 questions in the background
+            this.preloadImages(q + 1, 3);
         }
 
         selectAnswer(val) {

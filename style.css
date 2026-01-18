@@ -20,12 +20,17 @@
     --fluid-font-size: clamp(0.75rem, 1.1vw, 1rem);
 }
 
+@font-face {
+    font-family: 'Ubuntu';
+    src: url('font/ubuntu.ttf') format('truetype');
+}
+
 *, *::before, *::after {
     box-sizing: border-box;
 }
 
 body {
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Ubuntu';
     background-color: var(--bg-color);
     color: var(--body-text);
     margin: 0;
@@ -184,7 +189,7 @@ select:focus, input:focus {
     background: #080808; height: 0.2rem;
     border-radius: 0;
     margin-bottom: 0.5rem;
-    overflow: hidden; position: relative;
+    overflow: hidden;    position: relative;
     border: 0.06rem solid #1a1a1a;
     width: 100%;
 }
@@ -399,14 +404,14 @@ select:focus, input:focus {
 }
 
 #reliability-msg {
-    margin-top: 0.8rem;
-    padding: 0.6rem;
-    border: 0.06rem solid var(--border-color);
-    background-color: var(--input-bg);
-    border-radius: 0.25rem;
-    text-align: center;
-    font-size: 0.8rem;
-    color: var(--body-text);
+margin-top: 0.8rem;
+padding: 0.6rem;
+border: 0.06rem solid var(--border-color);
+background-color: var(--input-bg);
+border-radius: 0.25rem;
+text-align: center;
+font-size: 0.8rem;
+color: var(--body-text);
 }
 
 table {
@@ -496,7 +501,7 @@ tbody td { background-color: #000000; color: var(--body-text); }
     border: none;
     text-align: center;
     color: #444444;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Ubuntu';
 }
 
 .footer-content {
@@ -637,11 +642,12 @@ tbody td { background-color: #000000; color: var(--body-text); }
 
     .timer-bar {
         margin-bottom: 0.1rem;
-        height: 0.15rem;
+        height: 0.2rem;
     }
 
     .progress-info {
-        margin-bottom: 0.1rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
         font-size: 0.6rem;
     }
 

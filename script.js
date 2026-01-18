@@ -148,7 +148,6 @@
 
             this.dom = {
                 timerBar: document.getElementById('timer-bar-fill'),
-                timerText: document.getElementById('timer-text'),
                 qImage: document.getElementById('q-image'),
                 options: document.getElementById('options-container'),
                 qNum: document.getElementById('current-q-num'),
@@ -288,9 +287,6 @@
         }
 
         updateTimerDisplay() {
-            const m = Math.floor(this.timeLeft / 60);
-            const s = this.timeLeft % 60;
-            this.dom.timerText.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
             this.dom.timerBar.style.width = `${(this.timeLeft / CONFIG.totalTime) * 100}%`;
         }
 

@@ -200,7 +200,7 @@ select:focus, input:focus {
     font-size: 0.9rem; z-index: 2; letter-spacing: 0.1rem;
 }
 
-.progress-info { margin-bottom: 0.4rem; font-weight: 600; color: var(--muted-text); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.1rem; }
+.progress-info { margin-bottom: 0.5rem; margin-top: 0.2rem; font-weight: 600; color: var(--muted-text); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.1rem; }
 
 .question-area {
     background: var(--window-bg);

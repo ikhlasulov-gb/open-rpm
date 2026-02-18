@@ -22,7 +22,7 @@
 
 @font-face {
     font-family: 'Ubuntu';
-    src: url('font/ubuntu.ttf') format('truetype');
+    src: url('fonts/ubuntu.ttf') format('truetype');
 }
 
 *, *::before, *::after {

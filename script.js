@@ -1,8 +1,8 @@
 (function() {
     const CONFIG = {
         totalTime: 20 * 60,
-        imageExt: '.webp',
-        imagePath: 'img/',
+        imageExt: '.svg',
+        imagePath: 'images/',
     };
 
     const NORMATIVE_DISTRIBUTION = {
